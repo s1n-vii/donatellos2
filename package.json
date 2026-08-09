@@ -1,0 +1,34 @@
+{
+  "name": "donatellos2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "postbuild": "node scripts/seo-files.mjs",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "images": "node scripts/optimize-images.mjs",
+    "audit:menu": "node scripts/audit-menu.mjs",
+    "qa:responsive": "node scripts/qa.mjs",
+    "qa:functional": "node scripts/functional.mjs",
+    "qa:a11y": "node scripts/a11y.mjs",
+    "qa:shots": "node scripts/shots.mjs",
+    "qa:prod": "node scripts/prod-check.mjs",
+    "qa:motion": "node scripts/motion-cls.mjs"
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "oxlint": "^1.75.0",
+    "playwright": "^1.62.1",
+    "vite": "^8.2.0"
+  }
+}

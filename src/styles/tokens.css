@@ -1,0 +1,90 @@
+/* Design tokens for Donatellos 2.
+   Palette is pulled from the dining room: off-white walls, warm bulbs, stained
+   wood, black metal chairs, matte black ceiling. Red is reserved for actions. */
+
+:root {
+  /* Surfaces */
+  --cream: #f4efe6;
+  --soft-white: #fbf9f5;
+  --charcoal: #181817;
+  --near-black: #0e0e0d;
+
+  /* Accents */
+  --restaurant-red: #a52b24; /* 6.1:1 on cream */
+  --restaurant-red-dark: #8b221c; /* hover/active */
+  --red-on-dark: #d8574b; /* 4.9:1 on near-black */
+  --italian-green: #326044; /* used sparingly, one or two places only */
+  --warm-wood: #8b603c;
+  --warm-bulb: #e8b268; /* the hanging-bulb light, for hairline accents only */
+
+  /* Text */
+  --ink: #181817;
+  --ink-muted: #5a544b; /* 6.5:1 on cream */
+  --ink-inverse: #f4efe6;
+  --ink-inverse-muted: #b3aa9c; /* 8.0:1 on near-black */
+
+  /* Lines */
+  --muted-border: #d8d0c4;
+  --hairline: #e3dcd1;
+  --border-dark: #33322e;
+
+  /* Radii — sharp by default */
+  --radius-sm: 3px;
+  --radius-button: 4px;
+  --radius-image: 0px;
+
+  /* Spacing */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  /* Section rhythm — deliberately three different values so sections do not
+     all breathe identically. */
+  --section-tight: clamp(2.5rem, 5vw, 3.5rem);
+  --section-base: clamp(3.5rem, 7vw, 5.5rem);
+  --section-loose: clamp(4.5rem, 9vw, 7.5rem);
+
+  /* Widths */
+  --page-max: 1400px;
+  --content-max: 1120px;
+  --measure: 62ch;
+  --gutter: clamp(1.125rem, 4vw, 3.5rem);
+
+  /* Type */
+  --font-display: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
+  --font-body: 'Libre Franklin', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+  --text-lead: clamp(1.0625rem, 1rem + 0.4vw, 1.25rem);
+
+  /* Display sizes stay restrained: the H1 tops out well short of a billboard. */
+  --display-xl: clamp(2.375rem, 1.5rem + 4.2vw, 4.25rem);
+  --display-lg: clamp(1.875rem, 1.3rem + 2.6vw, 3.125rem);
+  --display-md: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);
+  --display-sm: clamp(1.25rem, 1.1rem + 0.8vw, 1.625rem);
+
+  --label: 0.75rem;
+  --label-tracking: 0.14em;
+
+  /* Header offset used for sticky positioning and scroll-margin */
+  --header-height: 64px;
+  --mobile-bar-height: 60px;
+  --category-nav-height: 48px;
+
+  --transition: 150ms ease;
+}
+
+@media (min-width: 900px) {
+  :root {
+    --header-height: 78px;
+    --mobile-bar-height: 0px;
+  }
+}

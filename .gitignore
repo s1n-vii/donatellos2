@@ -1,0 +1,17 @@
+node_modules
+dist
+dist-ssr
+
+# QA output and locally downloaded test browsers
+qa-shots
+.playwright-browsers
+
+# Editor / OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.local
+*.log
+npm-debug.log*
+.vercel
