@@ -77,8 +77,22 @@ if (jsonLd.address?.streetAddress !== '6945 York Rd')
   issues.push(`JSON-LD street wrong: ${jsonLd.address?.streetAddress}`)
 if (jsonLd.address?.addressLocality !== 'Abbottstown')
   issues.push(`JSON-LD city wrong: ${jsonLd.address?.addressLocality}`)
-if ('openingHoursSpecification' in jsonLd)
-  issues.push('JSON-LD must not list hours until owner-confirmed')
+const openingHours = jsonLd.openingHoursSpecification
+if (!Array.isArray(openingHours) || openingHours.length !== 6) {
+  issues.push(
+    `JSON-LD openingHoursSpecification must list six open days, got ${openingHours?.length ?? 0}`,
+  )
+} else {
+  const dayUrls = openingHours.map((entry) => entry.dayOfWeek)
+  if (dayUrls.some((url) => String(url).includes('Tuesday')))
+    issues.push('JSON-LD must omit closed Tuesday from openingHoursSpecification')
+  const monday = openingHours.find((entry) => String(entry.dayOfWeek).includes('Monday'))
+  if (monday?.opens !== '11:00' || monday?.closes !== '21:00')
+    issues.push(`JSON-LD Monday hours wrong: opens ${monday?.opens}, closes ${monday?.closes}`)
+  const sunday = openingHours.find((entry) => String(entry.dayOfWeek).includes('Sunday'))
+  if (sunday?.opens !== '11:00' || sunday?.closes !== '20:00')
+    issues.push(`JSON-LD Sunday hours wrong: opens ${sunday?.opens}, closes ${sunday?.closes}`)
+}
 if (jsonLd.url !== ORIGIN) issues.push(`JSON-LD url wrong: ${jsonLd.url}`)
 if (jsonLd.hasMenu !== `${ORIGIN}/menu`) issues.push(`JSON-LD hasMenu wrong: ${jsonLd.hasMenu}`)
 if ('image' in jsonLd && !SHARE_IMAGE_PATH) issues.push('JSON-LD must not claim image without a real photo')

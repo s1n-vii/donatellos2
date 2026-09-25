@@ -154,11 +154,26 @@ const iframe = page.locator('iframe')
 check('map iframe has title', ((await iframe.getAttribute('title')) ?? '').includes('6945 York Rd'))
 check('map iframe lazy loads', (await iframe.getAttribute('loading')) === 'lazy')
 
-const hoursPrompt = await page.locator('.visit-head__hours .hours--unverified').textContent()
+const visitHours = page.locator('.visit-head__hours')
 check(
-  'hours prompt asks customers to call when unverified',
-  (hoursPrompt ?? '').includes('(717) 624-7930'),
-  hoursPrompt?.trim(),
+  'visit page lists owner-confirmed hours',
+  (await visitHours.locator('.hours--full').count()) === 1 &&
+    (await visitHours.locator('.hours__row').count()) === 7,
+  `rows ${await visitHours.locator('.hours__row').count()}`,
+)
+const tuesdayHours = await visitHours
+  .locator('.hours__row', { has: page.locator('.hours__day', { hasText: 'Tuesday' }) })
+  .locator('.hours__time')
+  .textContent()
+check('Tuesday shows closed', (tuesdayHours ?? '').trim() === 'Closed', tuesdayHours?.trim())
+const mondayHours = await visitHours
+  .locator('.hours__row', { has: page.locator('.hours__day', { hasText: 'Monday' }) })
+  .locator('.hours__time')
+  .textContent()
+check(
+  'Monday hours match site config',
+  (mondayHours ?? '').includes('11:00 AM') && (mondayHours ?? '').includes('9:00 PM'),
+  mondayHours?.trim(),
 )
 
 // Focus visibility on the skip link

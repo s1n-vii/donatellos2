@@ -1,18 +1,13 @@
 /**
  * Single source of truth for Donatello's Pizzeria & Grill — Abbottstown, PA.
  *
- * Verified fields: address, phone, Slice ordering URL for this location.
- * Hours and Google rating are owner-confirmed only — left unset until supplied.
+ * Verified fields: address, phone, Slice ordering URL, owner-confirmed hours.
+ * Google rating is owner-confirmed only — left unset until supplied.
  */
 
-export type HourEntry = {
-  day: string
-  short: string
-  schemaDay: string
-  closed: boolean
-  open: string | null
-  close: string | null
-}
+import { confirmedHours, type HourEntry } from './hours.ts'
+
+export type { HourEntry }
 
 export const siteConfig = {
   name: "Donatello's Pizzeria & Grill",
@@ -40,9 +35,9 @@ export const siteConfig = {
     deliveryViaSlice: true,
   },
 
-  /** Owner-confirmed hours only. Empty until the Abbottstown owner verifies. */
-  hoursVerified: false,
-  hours: [] as HourEntry[],
+  /** Owner-confirmed hours — see `src/data/hours.ts`. */
+  hoursVerified: true,
+  hours: confirmedHours,
 
   /**
    * Verified Slice ordering page for 6945 York Rd, Abbottstown 17301.
