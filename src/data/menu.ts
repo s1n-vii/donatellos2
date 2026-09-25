@@ -1,5 +1,6 @@
 /**
- * Donatellos 2 menu.
+ * Shared Donatello's menu (transcribed from the West York in-store source).
+ * Abbottstown uses the same items and prices — do not invent or pull from Slice.
  *
  * PRICING RULES — read before editing:
  *  - The printed in-store menu is the only source of truth. Nothing here comes

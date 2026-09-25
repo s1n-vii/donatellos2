@@ -10,7 +10,7 @@ const width = Number(process.argv[2]) || 1440
 
 const SHOTS = [
   ['/', '.hero', 'hero'],
-  ['/', '.food', 'food'],
+  ['/', '.menu-categories', 'menu-categories'],
   ['/', '.made', 'made'],
   ['/', '.menu-preview', 'menu-preview'],
   ['/', '.dine-in', 'dinein'],
@@ -19,7 +19,7 @@ const SHOTS = [
   ['/', '.site-footer', 'footer'],
   ['/menu', '#fresh-hot-pizzas', 'menu-pizzas'],
   ['/menu', '#wings', 'menu-wings'],
-  ['/visit', '.visit-photo', 'visit-photo'],
+  ['/visit', '.visit-map', 'visit-map'],
   ['/reviews', '.reviews-page', 'reviews'],
 ]
 
@@ -32,7 +32,12 @@ for (const [route, selector, name] of SHOTS) {
     await page.goto(BASE + route, { waitUntil: 'networkidle' })
     current = route
   }
-  const target = page.locator(selector).first()
+  const locator = page.locator(selector)
+  if ((await locator.count()) === 0) {
+    console.log(`skip ${width}-${name} (${selector} not on page)`)
+    continue
+  }
+  const target = locator.first()
   await target.scrollIntoViewIfNeeded()
   await page.waitForLoadState('networkidle')
   const path = `qa-shots/${width}-${name}.png`

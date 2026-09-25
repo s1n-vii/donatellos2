@@ -1,21 +1,21 @@
 {
-  "name": "donatellos2",
+  "name": "donatellos-abbottstown",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "postbuild": "node scripts/seo-files.mjs",
+    "postbuild": "node --experimental-strip-types scripts/seo-files.mjs",
     "lint": "oxlint",
     "preview": "vite preview",
     "images": "node scripts/optimize-images.mjs",
-    "audit:menu": "node scripts/audit-menu.mjs",
+    "audit:menu": "node --experimental-strip-types scripts/audit-menu.mjs",
     "qa:responsive": "node scripts/qa.mjs",
     "qa:functional": "node scripts/functional.mjs",
     "qa:a11y": "node scripts/a11y.mjs",
     "qa:shots": "node scripts/shots.mjs",
-    "qa:prod": "node scripts/prod-check.mjs",
+    "qa:prod": "node --experimental-strip-types scripts/prod-check.mjs",
     "qa:motion": "node scripts/motion-cls.mjs"
   },
   "dependencies": {

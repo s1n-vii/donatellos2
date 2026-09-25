@@ -11,6 +11,29 @@
   background-color: var(--near-black);
 }
 
+.hero--no-photo {
+  min-height: auto;
+}
+
+.hero--no-photo .hero__panel {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-block: var(--section-tight);
+}
+
+@media (min-width: 900px) {
+  .hero--no-photo {
+    min-height: auto;
+    max-width: none;
+  }
+
+  .hero--no-photo .hero__panel {
+    width: 100%;
+    margin-left: 0;
+    padding-inline: var(--gutter);
+  }
+}
+
 .hero__panel {
   padding: var(--space-lg) var(--gutter) var(--space-xl);
   border-top: 3px solid var(--restaurant-red);
@@ -110,88 +133,165 @@
   }
 }
 
-/* Immediate info strip ----------------------------------------------------- */
+@media (min-width: 900px) {
+  .hero.hero--no-photo {
+    display: block;
+    min-height: auto;
+  }
 
-.info-strip {
+  .hero.hero--no-photo .hero__panel {
+    position: static;
+    align-self: auto;
+    justify-self: auto;
+    width: 100%;
+    max-width: var(--content-max);
+    margin-inline: auto;
+  }
+}
+
+/* Location + ordering band (replaces three-column info strip) ---------------- */
+
+.home-practical {
   background-color: var(--cream);
   border-bottom: 1px solid var(--muted-border);
 }
 
-.info-strip__inner {
+.home-practical__inner {
   display: grid;
+  gap: var(--space-lg);
   padding-block: var(--space-lg);
 }
 
-.info-strip__item + .info-strip__item {
-  margin-top: var(--space-md);
-  padding-top: var(--space-md);
-  border-top: 1px solid var(--muted-border);
+.home-practical__kicker {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--warm-wood);
 }
 
-.info-strip__address {
+.home-practical__address {
   display: grid;
-  margin-top: 0.45rem;
+  margin-top: 0.35rem;
   font-size: 1.0625rem;
   font-style: normal;
+  line-height: 1.45;
 }
 
-.info-strip__link {
+.home-practical__directions {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
   min-height: 44px;
+  margin-top: 0.35rem;
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--restaurant-red);
 }
 
-.info-strip__lead {
-  margin-top: 0.45rem;
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 600;
-  text-transform: uppercase;
+.home-practical__lead {
+  max-width: 36ch;
+  font-size: var(--text-lead);
+  line-height: 1.45;
 }
 
-.info-strip__sub {
-  font-size: 0.875rem;
-}
-
-.info-strip__phone {
-  margin-top: 0.3rem;
-}
-
-.info-strip__phone a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.25rem);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--restaurant-red);
-  text-decoration: none;
-}
-
-.info-strip__phone a:hover {
-  text-decoration: underline;
+.home-practical__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: var(--space-md);
 }
 
 @media (min-width: 768px) {
-  .info-strip__inner {
-    grid-template-columns: 1.3fr 0.85fr 0.85fr;
+  .home-practical__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: start;
+    gap: clamp(2rem, 5vw, 4rem);
+    padding-block: var(--space-xl);
   }
 
-  .info-strip__item + .info-strip__item {
-    margin-top: 0;
-    padding-top: 0;
-    padding-left: clamp(1.5rem, 3vw, 3rem);
-    border-top: 0;
-    border-left: 1px solid var(--muted-border);
+  .home-practical__order {
+    padding-left: clamp(1.5rem, 4vw, 3rem);
+    border-left: 2px solid var(--ink);
   }
 }
 
-/* Food feature grid -------------------------------------------------------- */
+/* Menu category index (no photo mosaic) ------------------------------------ */
+
+.menu-categories {
+  padding-block: var(--section-base);
+  background-color: var(--soft-white);
+}
+
+.menu-categories__inner {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+.menu-categories__title {
+  font-size: var(--display-lg);
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+.menu-categories__sub {
+  margin-top: var(--space-2xs);
+  max-width: 42ch;
+  color: var(--ink-muted);
+}
+
+.menu-categories__list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--ink);
+}
+
+.menu-categories__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  min-height: 44px;
+  padding-block: 0.85rem;
+  border-bottom: 1px solid var(--muted-border);
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
+}
+
+.menu-categories__link::after {
+  content: '→';
+  flex-shrink: 0;
+  color: var(--restaurant-red);
+  transition: transform var(--transition);
+}
+
+.menu-categories__link:hover {
+  color: var(--restaurant-red);
+}
+
+.menu-categories__link:hover::after {
+  transform: translateX(4px);
+}
+
+@media (min-width: 768px) {
+  .menu-categories__inner {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    align-items: start;
+    column-gap: clamp(2rem, 6vw, 5rem);
+  }
+
+  .menu-categories__list {
+    margin-top: 0;
+  }
+}
+
+/* Food feature grid (photo mosaic — when FOOD_TILES use real src) ---------- */
 
 .food {
   padding-block: var(--section-base);
@@ -478,36 +578,35 @@
 
 .made__tagline {
   margin-top: var(--space-sm);
-  font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: 1.0625rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--restaurant-red);
 }
 
+.made__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .made__fact {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-md);
-  padding: 0.85rem 0;
+  padding: 0.65rem 0;
+  padding-left: 1.1rem;
   border-bottom: 1px solid var(--muted-border);
+  font-size: var(--text-lead);
+  line-height: 1.45;
+  text-indent: -1.1rem;
+}
+
+.made__fact::before {
+  content: '·';
+  margin-right: 0.55rem;
+  color: var(--warm-wood);
+  font-weight: 700;
 }
 
 .made__fact:first-child {
   border-top: 1px solid var(--muted-border);
-}
-
-.made__index {
-  min-width: 1.75rem;
-  font-family: var(--font-display);
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--warm-wood);
-}
-
-.made__text {
-  font-size: var(--text-lead);
 }
 
 .made__photo {
@@ -556,7 +655,6 @@
 
 .menu-preview__title {
   font-size: var(--display-lg);
-  text-transform: uppercase;
 }
 
 .menu-preview__row {
@@ -569,7 +667,6 @@
   font-family: var(--font-display);
   font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.625rem);
   font-weight: 600;
-  text-transform: uppercase;
   text-decoration: none;
   color: var(--ink-inverse);
 }
@@ -705,7 +802,6 @@
 
 .home-location__title {
   font-size: var(--display-md);
-  text-transform: uppercase;
 }
 
 .home-location__address {
@@ -714,26 +810,6 @@
   margin-top: var(--space-sm);
   font-size: 1.0625rem;
   font-style: normal;
-}
-
-.home-location__phone {
-  margin-top: var(--space-xs);
-}
-
-.home-location__phone a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--restaurant-red);
-  text-decoration: none;
-}
-
-.home-location__phone a:hover {
-  text-decoration: underline;
 }
 
 .home-location__service {
@@ -771,12 +847,12 @@
 .menu-page__head {
   padding-top: var(--space-xl);
   padding-bottom: var(--space-md);
-  background-color: var(--cream);
+  background-color: var(--soft-white);
+  border-bottom: 1px solid var(--muted-border);
 }
 
 .menu-page__title {
   font-size: var(--display-xl);
-  text-transform: uppercase;
 }
 
 .menu-page__intro {
@@ -796,13 +872,14 @@
   position: sticky;
   top: calc(var(--header-height) - 1px);
   z-index: 80;
-  background-color: var(--cream);
-  border-block: 1px solid var(--muted-border);
+  background-color: var(--soft-white);
+  border-bottom: 1px solid var(--muted-border);
 }
 
 .menu-page__body {
   padding-top: var(--space-xl);
   padding-bottom: var(--space-2xl);
+  background-color: var(--cream);
 }
 
 .menu-empty {
@@ -828,9 +905,9 @@
 }
 
 .menu-page__foot-text {
-  font-family: var(--font-display);
-  font-size: var(--display-sm);
-  text-transform: uppercase;
+  max-width: 28ch;
+  font-size: var(--text-lead);
+  line-height: 1.45;
 }
 
 .menu-page__foot-actions {
@@ -844,8 +921,9 @@
 =========================================================================== */
 
 .visit-head {
-  padding-block: var(--space-xl) var(--space-2xl);
-  background-color: var(--cream);
+  padding-block: var(--space-xl) var(--space-lg);
+  background-color: var(--soft-white);
+  border-bottom: 1px solid var(--muted-border);
 }
 
 .visit-head__inner {
@@ -866,26 +944,6 @@
   font-style: normal;
 }
 
-.visit-head__phone {
-  margin-top: var(--space-xs);
-}
-
-.visit-head__phone a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 1.6rem + 1.6vw, 2.5rem);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--restaurant-red);
-  text-decoration: none;
-}
-
-.visit-head__phone a:hover {
-  text-decoration: underline;
-}
-
 .visit-head__actions {
   display: flex;
   flex-wrap: wrap;
@@ -894,8 +952,9 @@
 }
 
 .visit-head__hours {
-  padding-top: var(--space-sm);
-  border-top: 2px solid var(--ink);
+  padding: var(--space-md);
+  background-color: var(--cream);
+  border: 1px solid var(--muted-border);
 }
 
 .visit-head__hours .label {
@@ -919,13 +978,15 @@
 }
 
 .visit-ordering {
-  padding-block: var(--section-base);
-  background-color: var(--soft-white);
+  padding-block: var(--section-tight) var(--section-base);
+  background-color: var(--cream);
 }
 
 .visit-ordering__title {
-  margin-bottom: var(--space-lg);
-  font-size: var(--display-md);
+  margin-bottom: var(--space-md);
+  font-size: var(--display-sm);
+  font-weight: 600;
+  line-height: 1.35;
 }
 
 .visit-ordering__row {
@@ -940,10 +1001,8 @@
 }
 
 .visit-ordering__label {
-  font-family: var(--font-display);
-  font-size: 1.375rem;
-  font-weight: 600;
-  text-transform: uppercase;
+  font-size: 1.0625rem;
+  font-weight: 700;
 }
 
 .visit-ordering__text {
@@ -968,7 +1027,8 @@
 
 .visit-map {
   padding-block: var(--section-base);
-  background-color: var(--cream);
+  background-color: var(--soft-white);
+  border-top: 1px solid var(--muted-border);
 }
 
 .visit-map__inner {
@@ -1026,8 +1086,9 @@
 =========================================================================== */
 
 .reviews-head {
-  padding-block: var(--space-2xl) var(--space-xl);
-  background-color: var(--cream);
+  padding-block: var(--space-xl) var(--space-md);
+  background-color: var(--soft-white);
+  border-bottom: 1px solid var(--muted-border);
 }
 
 .reviews-head__title {
@@ -1088,17 +1149,29 @@
 }
 
 .reviews-empty {
-  padding-block: var(--section-base);
+  padding-block: var(--space-lg);
+  background-color: var(--cream);
+}
+
+.reviews-empty--solo {
+  padding-block: var(--space-md) var(--space-lg);
+}
+
+.reviews-empty__inner {
+  padding-top: 0;
+  border-top: 2px solid var(--ink);
 }
 
 .reviews-empty__text {
   max-width: 48ch;
-  font-size: var(--text-lead);
+  padding-top: var(--space-md);
+  font-size: 1.0625rem;
+  line-height: 1.5;
 }
 
 .reviews-cta {
-  padding-block: var(--space-2xl);
-  background-color: var(--cream);
+  padding-block: var(--space-lg);
+  background-color: var(--soft-white);
   border-top: 1px solid var(--muted-border);
 }
 
@@ -1111,15 +1184,66 @@
 }
 
 .reviews-cta__text {
-  font-family: var(--font-display);
-  font-size: var(--display-sm);
-  text-transform: uppercase;
+  max-width: 32ch;
+  font-size: var(--text-lead);
+  line-height: 1.45;
 }
 
 @media (min-width: 900px) {
   .reviews-list__items > li:nth-child(even) {
     margin-left: auto;
   }
+}
+
+.dine-in--copy-only .dine-in__inner {
+  padding: var(--section-base) var(--gutter);
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+.specials {
+  padding-block: var(--section-tight);
+  background-color: var(--soft-white);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.specials__title {
+  font-size: var(--display-md);
+}
+
+.specials__list {
+  display: grid;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+  padding: 0;
+  list-style: none;
+}
+
+.specials__name {
+  font-family: var(--font-display);
+  font-size: var(--display-sm);
+  text-transform: uppercase;
+}
+
+.specials__desc {
+  margin-top: var(--space-2xs);
+  max-width: var(--measure);
+}
+
+.specials__price {
+  margin-top: var(--space-2xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.hours--unverified {
+  max-width: var(--measure);
+  line-height: 1.5;
+}
+
+.hours--unverified a {
+  font-weight: 600;
+  color: inherit;
 }
 
 /* ===========================================================================

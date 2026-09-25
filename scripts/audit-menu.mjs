@@ -1,6 +1,6 @@
 /**
  * Independent re-transcription of the prices in the project brief, diffed
- * against src/data/menu.js. Catches typos that a second read-through misses.
+ * against src/data/menu.ts. Catches typos that a second read-through misses.
  * Run with: node scripts/audit-menu.mjs
  *
  * A photograph of the in-store menu was later checked against this list and
@@ -8,7 +8,7 @@
  * adjustment matches. Entries marked FROM PRINTED MENU appear on the in-store
  * menu but were not on the owner's list.
  */
-import { menu } from '../src/data/menu.js'
+import { menu } from '../src/data/menu.ts'
 
 const EXPECTED = {
   'Plain Cheese Pizza': 'Medium 12.99 | Large 14.99',

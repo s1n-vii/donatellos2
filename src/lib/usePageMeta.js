@@ -30,12 +30,18 @@ export function usePageMeta({ title, description, path, robots = 'index, follow'
     setMetaTag('property', 'og:description', description)
     setMetaTag('property', 'og:type', 'website')
     setMetaTag('property', 'og:site_name', business.name)
-    setMetaTag('name', 'twitter:card', business.siteUrl ? 'summary_large_image' : null)
+    setMetaTag(
+      'name',
+      'twitter:card',
+      business.siteUrl && SHARE_IMAGE_PATH ? 'summary_large_image' : 'summary',
+    )
     setMetaTag('name', 'twitter:title', title)
     setMetaTag('name', 'twitter:description', description)
 
     const canonicalHref = path ? absoluteSiteUrl(path) : null
     const existing = document.head.querySelector('link[rel="canonical"]')
+    const shareImage =
+      business.siteUrl && SHARE_IMAGE_PATH ? `${business.siteUrl}${SHARE_IMAGE_PATH}` : null
 
     if (canonicalHref) {
       const link = existing ?? document.createElement('link')
@@ -43,8 +49,8 @@ export function usePageMeta({ title, description, path, robots = 'index, follow'
       link.setAttribute('href', canonicalHref)
       if (!existing) document.head.appendChild(link)
       setMetaTag('property', 'og:url', canonicalHref)
-      setMetaTag('property', 'og:image', `${business.siteUrl}${SHARE_IMAGE_PATH}`)
-      setMetaTag('name', 'twitter:image', `${business.siteUrl}${SHARE_IMAGE_PATH}`)
+      setMetaTag('property', 'og:image', shareImage)
+      setMetaTag('name', 'twitter:image', shareImage)
     } else if (existing) {
       existing.remove()
       setMetaTag('property', 'og:url', null)

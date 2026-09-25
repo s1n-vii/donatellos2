@@ -1,44 +1,42 @@
 import { business } from './business.js'
 
-export const SHARE_IMAGE_PATH = '/images/interior/interior-01.webp'
+/** No location photography in repo yet — omit share image until a real shot is added. */
+export const SHARE_IMAGE_PATH = null
 
-/**
- * One source of truth for both the browser-rendered metadata and the static
- * route HTML written after the Vite build.
- */
 export const PAGE_META = {
   home: {
     path: '/',
-    title: 'Donatellos 2 | Pizza, Subs & Wings in West York, PA',
+    title: "Donatello's Pizzeria & Grill | Pizza, Subs & Wings in Abbottstown, PA",
     description:
-      'Donatellos 2 serves New York-style pizza, fresh-made subs, wings and Italian-American favorites in West York, PA. Dine in or call for pickup.',
+      "Donatello's Pizzeria & Grill serves New York-style pizza, fresh-made subs, wings and Italian-American favorites in Abbottstown, PA. Dine in or call for pickup.",
     robots: 'index, follow',
   },
   menu: {
     path: '/menu',
-    title: 'Menu | Donatellos 2 – West York, PA',
+    title: "Menu | Donatello's Pizzeria & Grill – Abbottstown, PA",
     description:
-      'The full Donatellos 2 menu: pizza, specialty and stuffed pizzas, stromboli, wings, hot and cold subs, wraps, salads, pasta dinners and more. West York, PA.',
+      "The full Donatello's menu: pizza, specialty and stuffed pizzas, stromboli, wings, hot and cold subs, wraps, salads, pasta dinners and more. Abbottstown, PA.",
     robots: 'index, follow',
   },
   visit: {
     path: '/visit',
-    title: 'Visit Donatellos 2 | 4790 W Market St, York, PA',
+    title: "Visit Donatello's | 6945 York Rd, Abbottstown, PA",
     description:
-      'Donatellos 2 is at 4790 W Market St in West York, PA. Hours, directions, dine-in, pickup and delivery details. Call (717) 699-7896.',
+      "Donatello's Pizzeria & Grill is at 6945 York Rd in Abbottstown, PA. Directions, dine-in, pickup and delivery details. Call (717) 624-7930.",
     robots: 'index, follow',
   },
   reviews: {
     path: '/reviews',
-    title: 'Reviews | Donatellos 2 – West York, PA',
+    title: "Reviews | Donatello's Pizzeria & Grill – Abbottstown, PA",
     description:
-      'What customers say about Donatellos 2 in West York, PA. Real reviews from the pizza shop at 4790 W Market St.',
+      "What customers say about Donatello's Pizzeria & Grill in Abbottstown, PA.",
     robots: 'index, follow',
   },
   notFound: {
     path: null,
-    title: 'Page not found | Donatellos 2',
-    description: 'That page does not exist. Find the Donatellos 2 menu, hours and location here.',
+    title: "Page not found | Donatello's Pizzeria & Grill",
+    description:
+      "That page does not exist. Find the Donatello's menu, hours and Abbottstown location here.",
     robots: 'noindex, follow',
   },
 }
@@ -64,20 +62,25 @@ export function buildRestaurantSchema() {
       addressCountry: business.address.country,
     },
     servesCuisine: ['Pizza', 'Italian-American'],
-    openingHoursSpecification: business.hours
+  }
+
+  if (business.hoursVerified && business.hours.length) {
+    schema.openingHoursSpecification = business.hours
       .filter((entry) => !entry.closed)
       .map((entry) => ({
         '@type': 'OpeningHoursSpecification',
         dayOfWeek: `https://schema.org/${entry.schemaDay}`,
         opens: entry.open,
         closes: entry.close,
-      })),
+      }))
   }
 
   if (business.siteUrl) {
     schema.url = business.siteUrl
     schema.hasMenu = `${business.siteUrl}/menu`
-    schema.image = `${business.siteUrl}${SHARE_IMAGE_PATH}`
+    if (SHARE_IMAGE_PATH) {
+      schema.image = `${business.siteUrl}${SHARE_IMAGE_PATH}`
+    }
   }
 
   return schema

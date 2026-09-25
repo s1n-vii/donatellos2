@@ -64,7 +64,8 @@ function setCanonical(html, href) {
 
 function renderRouteHtml(source, meta) {
   const canonical = meta.path ? absoluteSiteUrl(meta.path) : null
-  const shareImage = canonical ? `${business.siteUrl}${SHARE_IMAGE_PATH}` : null
+  const shareImage =
+    canonical && SHARE_IMAGE_PATH ? `${business.siteUrl}${SHARE_IMAGE_PATH}` : null
   let html = source.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(meta.title)}</title>`)
 
   html = setMeta(html, 'name', 'description', meta.description)
@@ -75,7 +76,12 @@ function renderRouteHtml(source, meta) {
   html = setMeta(html, 'property', 'og:site_name', business.name)
   html = setMeta(html, 'property', 'og:url', canonical)
   html = setMeta(html, 'property', 'og:image', shareImage)
-  html = setMeta(html, 'name', 'twitter:card', canonical ? 'summary_large_image' : null)
+  html = setMeta(
+    html,
+    'name',
+    'twitter:card',
+    canonical && shareImage ? 'summary_large_image' : canonical ? 'summary' : null,
+  )
   html = setMeta(html, 'name', 'twitter:title', meta.title)
   html = setMeta(html, 'name', 'twitter:description', meta.description)
   html = setMeta(html, 'name', 'twitter:image', shareImage)

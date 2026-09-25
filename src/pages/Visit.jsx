@@ -1,6 +1,5 @@
 import { Button, CallToOrderButton, DeliveryButton } from '../components/Button'
 import { Hours } from '../components/Hours'
-import { RestaurantImage } from '../components/RestaurantImage'
 import {
   addressLines,
   addressSingleLine,
@@ -16,7 +15,7 @@ const ORDER_METHODS = [
   {
     id: 'dine-in',
     label: 'Dine in',
-    text: 'Sit down at the restaurant on W Market St and enjoy your meal in the dining room.',
+    text: `Sit down at the restaurant on ${business.address.street} and enjoy your meal in the dining room.`,
   },
   {
     id: 'pickup',
@@ -39,21 +38,13 @@ export function Visit() {
         <div className="page visit-head__inner">
           <div className="visit-head__copy">
             <h1 className="visit-head__title" id="visit-heading">
-              Visit Donatellos 2 in West York
+              Visit {business.name} in Abbottstown
             </h1>
             <address className="visit-head__address">
               {addressLines.map((line) => (
                 <span key={line}>{line}</span>
               ))}
             </address>
-            <p className="visit-head__phone">
-              <a
-                href={business.phone.href}
-                onClick={() => track(EVENTS.CALL_ORDER_CLICK, { location: 'visit_header' })}
-              >
-                {business.phone.display}
-              </a>
-            </p>
             <div className="visit-head__actions">
               <CallToOrderButton location="visit_header" />
               <Button
@@ -73,18 +64,6 @@ export function Visit() {
           </div>
         </div>
       </section>
-
-      <div className="visit-photo">
-        <RestaurantImage
-          src="/images/interior/interior-01.webp"
-          srcSet="/images/interior/interior-01-640.webp 640w, /images/interior/interior-01.webp 1024w"
-          sizes="100vw"
-          alt="Inside Donatellos 2: wooden tables, black metal chairs, brick and reclaimed wood walls, and warm bulbs strung across the ceiling"
-          ratio="21 / 9"
-          ratioMobile="4 / 3"
-          objectPosition="center 42%"
-        />
-      </div>
 
       <section className="visit-ordering" aria-labelledby="visit-ordering-heading">
         <div className="page page--content">
@@ -113,8 +92,8 @@ export function Visit() {
               Finding us
             </h2>
             <p className="visit-map__text">
-              Located in West York on W Market St, and convenient for customers across the
-              surrounding York area, including Thomasville, Spring Grove, Dover and East Berlin.
+              On York Road in Abbottstown, convenient for Hanover, Gettysburg and the surrounding
+              York-Adams county area.
             </p>
             <p className="visit-map__address-line text-muted">{addressSingleLine}</p>
             <Button
@@ -129,7 +108,7 @@ export function Visit() {
 
           <div className="visit-map__frame">
             <iframe
-              title={`Google Map showing Donatellos 2 at ${addressSingleLine}`}
+              title={`Google Map showing ${business.name} at ${addressSingleLine}`}
               src={mapEmbedUrl}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
