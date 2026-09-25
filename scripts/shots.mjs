@@ -10,7 +10,7 @@ const width = Number(process.argv[2]) || 1440
 
 const SHOTS = [
   ['/', '.hero', 'hero'],
-  ['/', '.food', 'food'],
+  ['/', '.menu-categories', 'menu-categories'],
   ['/', '.made', 'made'],
   ['/', '.menu-preview', 'menu-preview'],
   ['/', '.dine-in', 'dinein'],

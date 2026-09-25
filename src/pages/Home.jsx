@@ -11,50 +11,12 @@ import { PAGE_META } from '../data/seo'
 import { EVENTS, track } from '../lib/analytics'
 import { usePageMeta } from '../lib/usePageMeta'
 
-const brandShort = "Donatello's"
-
-/**
- * Food categories. `src` stays null until a real photograph of that item
- * exists; tiles without a photo render as typographic blocks rather than empty
- * frames.
- */
-const FOOD_TILES = [
-  {
-    id: 'pizza',
-    name: 'Pizza',
-    to: '/menu#fresh-hot-pizzas',
-    src: null,
-    alt: `A whole pizza from ${brandShort}, cut into slices`,
-    area: 'pizza',
-    ratioMobile: '4 / 5',
-  },
-  {
-    id: 'cheesesteak',
-    name: 'Cheesesteaks',
-    to: '/menu#hot-subs',
-    src: null,
-    alt: `A cheesesteak sub on a roll from ${brandShort}`,
-    area: 'cheesesteak',
-    ratioMobile: '16 / 9',
-  },
-  {
-    id: 'cheeseburger-sub',
-    name: 'Cheeseburger Subs',
-    to: '/menu#hot-subs',
-    src: null,
-    alt: `A cheeseburger sub from ${brandShort}`,
-    area: 'burger',
-    ratioMobile: '4 / 3',
-  },
-  {
-    id: 'wings',
-    name: 'Wings',
-    to: '/menu#wings',
-    src: null,
-    alt: `A basket of wings from ${brandShort}`,
-    area: 'wings',
-    ratioMobile: '2 / 1',
-  },
+/** Quick links into the menu until category photography is wired (see public/images/README). */
+const MENU_CATEGORY_LINKS = [
+  { name: 'Pizza', to: '/menu#fresh-hot-pizzas' },
+  { name: 'Cheesesteaks', to: '/menu#hot-subs' },
+  { name: 'Cheeseburger subs', to: '/menu#hot-subs' },
+  { name: 'Wings', to: '/menu#wings' },
 ]
 
 const MADE_HERE_PHOTO = null
@@ -73,9 +35,9 @@ export function Home() {
   return (
     <>
       <Hero />
-      <InfoStrip />
+      <HomePractical />
       {hasSpecials && <SpecialsSection />}
-      <FoodFeature />
+      <MenuCategories />
       <MadeHere />
       <MenuPreview />
       <DineIn />
@@ -103,15 +65,6 @@ function Hero() {
             View Menu
           </Button>
         </div>
-
-        <p className="hero__phone">
-          <a
-            href={business.phone.href}
-            onClick={() => track(EVENTS.CALL_ORDER_CLICK, { location: 'hero_number' })}
-          >
-            {business.phone.display}
-          </a>
-        </p>
 
         <p className="hero__tertiary">
           <DeliveryButton variant="link-inverse" location="hero" label="Order Delivery Online" />
@@ -147,106 +100,67 @@ function SpecialsSection() {
   )
 }
 
-function InfoStrip() {
+function HomePractical() {
   return (
-    <section className="info-strip" aria-label="Location, service and phone">
-      <div className="page info-strip__inner">
-        <div className="info-strip__item">
-          <h2 className="label">Find us</h2>
-          <address className="info-strip__address">
+    <section className="home-practical" aria-labelledby="home-practical-heading">
+      <div className="page home-practical__inner">
+        <div className="home-practical__where">
+          <h2 className="visually-hidden" id="home-practical-heading">
+            Location and ordering
+          </h2>
+          <p className="home-practical__kicker">{business.areaLine}</p>
+          <address className="home-practical__address">
             {addressLines.map((line) => (
               <span key={line}>{line}</span>
             ))}
           </address>
           <a
-            className="info-strip__link"
+            className="home-practical__directions"
             href={directionsUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => track(EVENTS.DIRECTIONS_CLICK, { location: 'home_info_strip' })}
           >
-            Get Directions
+            Get directions
             <span aria-hidden="true"> ↗</span>
             <span className="visually-hidden"> (opens in a new tab)</span>
           </a>
         </div>
 
-        <div className="info-strip__item">
-          <h2 className="label">How to order</h2>
-          <p className="info-strip__lead">Dine In + Pickup</p>
-          <p className="info-strip__sub text-muted">Delivery through Slice.</p>
-        </div>
-
-        <div className="info-strip__item">
-          <h2 className="label">Call the shop</h2>
-          <p className="info-strip__phone">
-            <a
-              href={business.phone.href}
-              onClick={() => track(EVENTS.CALL_ORDER_CLICK, { location: 'home_info_strip' })}
-            >
-              {business.phone.display}
-            </a>
+        <div className="home-practical__order">
+          <p className="home-practical__lead">
+            Dine in and pickup by phone. Delivery through Slice.
           </p>
+          <div className="home-practical__actions">
+            <CallToOrderButton location="home_info_strip" />
+            <DeliveryButton variant="ghost" location="home_info_strip" label="Order delivery" />
+          </div>
         </div>
       </div>
     </section>
   )
 }
 
-function FoodFeature() {
-  const hasPhotos = FOOD_TILES.some((tile) => tile.src)
-
+function MenuCategories() {
   return (
-    <section className="food" aria-labelledby="food-heading">
-      <div className="page">
-        <div className="food__head">
-          <h2 className="food__title" id="food-heading">
-            Pizza. Cheesesteaks. Subs. Wings.
+    <section className="menu-categories" aria-labelledby="menu-categories-heading">
+      <div className="page menu-categories__inner">
+        <div className="menu-categories__intro">
+          <h2 className="menu-categories__title" id="menu-categories-heading">
+            Pizza, cheesesteaks, subs, wings
           </h2>
-          <p className="food__sub">New York-style pizza, subs, wings and more.</p>
+          <p className="menu-categories__sub">New York-style pizza and hot subs from the menu.</p>
         </div>
 
-        <ul className={`food__grid ${hasPhotos ? '' : 'food__grid--type'}`.trim()}>
-          {FOOD_TILES.map((tile) => (
-            <li className="food__tile" key={tile.id} data-area={tile.area}>
-              <Link className="food__link" to={tile.to}>
-                {tile.src ? (
-                  <>
-                    <RestaurantImage
-                      src={tile.src}
-                      srcSet={tile.srcSet}
-                      sizes={tile.sizes}
-                      alt={tile.alt}
-                      ratio="4 / 3"
-                      ratioMobile={tile.ratioMobile}
-                      className="media--fill"
-                    />
-                    <span className="food__label">
-                      <span className="food__name">{tile.name}</span>
-                      <span className="food__cue" aria-hidden="true">
-                        On the menu →
-                      </span>
-                    </span>
-                  </>
-                ) : (
-                  <span className="food__plate">
-                    <span className="food__name">{tile.name}</span>
-                    <span className="food__cue" aria-hidden="true">
-                      On the menu →
-                    </span>
-                  </span>
-                )}
+        <ul className="menu-categories__list">
+          {MENU_CATEGORY_LINKS.map((item) => (
+            <li key={item.name}>
+              <Link className="menu-categories__link" to={item.to}>
+                {item.name}
               </Link>
             </li>
           ))}
         </ul>
-
-        {import.meta.env.DEV && FOOD_TILES.some((tile) => !tile.src) && (
-          <p className="dev-note">
-            Development only: these categories have no photograph yet, so they render as type. Add
-            files under public/images/food/ and set src on the matching tile in Home.jsx.
-          </p>
-        )}
       </div>
     </section>
   )
@@ -263,16 +177,13 @@ function MadeHere() {
           <p className="made__tagline">Made here. Served hot.</p>
         </div>
 
-        <ol className="made__list">
-          {MADE_HERE.map((fact, index) => (
+        <ul className="made__list">
+          {MADE_HERE.map((fact) => (
             <li className="made__fact" key={fact}>
-              <span className="made__index" aria-hidden="true">
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <span className="made__text">{fact}</span>
+              {fact}
             </li>
           ))}
-        </ol>
+        </ul>
 
         {MADE_HERE_PHOTO && (
           <div className="made__photo">
@@ -300,10 +211,10 @@ function MenuPreview() {
       <div className="page menu-preview__inner">
         <div className="menu-preview__head">
           <h2 className="menu-preview__title" id="menu-preview-heading">
-            On the Menu
+            On the menu
           </h2>
           <Button to="/menu" variant="secondary-inverse">
-            See Full Menu
+            See full menu
           </Button>
         </div>
 
@@ -391,14 +302,6 @@ function LocationBlock() {
               <span key={line}>{line}</span>
             ))}
           </address>
-          <p className="home-location__phone">
-            <a
-              href={business.phone.href}
-              onClick={() => track(EVENTS.CALL_ORDER_CLICK, { location: 'home_location' })}
-            >
-              {business.phone.display}
-            </a>
-          </p>
           <p className="home-location__service">Dine in. Pick it up. Delivery through Slice.</p>
           <div className="home-location__actions">
             <Button
@@ -407,7 +310,10 @@ function LocationBlock() {
               external
               onClick={() => track(EVENTS.DIRECTIONS_CLICK, { location: 'home_location' })}
             >
-              Get Directions
+              Get directions
+            </Button>
+            <Button to="/visit" variant="ghost">
+              Hours &amp; map
             </Button>
           </div>
         </div>

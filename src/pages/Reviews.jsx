@@ -76,8 +76,8 @@ export function Reviews() {
           </div>
         </section>
       ) : (
-        <section className="reviews-empty" aria-label="Reviews">
-          <div className="page page--content">
+        <section className="reviews-empty reviews-empty--solo" aria-label="Reviews">
+          <div className="page page--content reviews-empty__inner">
             <p className="reviews-empty__text">
               Review excerpts are being added. In the meantime, the best way to judge the food is
               to come in or call an order through.

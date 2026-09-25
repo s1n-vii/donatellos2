@@ -9,9 +9,7 @@ export function Footer() {
     <footer className="site-footer on-dark">
       <div className="page site-footer__inner">
         <div className="site-footer__brand">
-          <p className="site-footer__name">
-            Donatellos <span className="wordmark__numeral">2</span>
-          </p>
+          <p className="site-footer__name">Donatello&apos;s</p>
           <address className="site-footer__address">
             {addressLines.map((line) => (
               <span key={line}>{line}</span>

@@ -45,14 +45,6 @@ export function Visit() {
                 <span key={line}>{line}</span>
               ))}
             </address>
-            <p className="visit-head__phone">
-              <a
-                href={business.phone.href}
-                onClick={() => track(EVENTS.CALL_ORDER_CLICK, { location: 'visit_header' })}
-              >
-                {business.phone.display}
-              </a>
-            </p>
             <div className="visit-head__actions">
               <CallToOrderButton location="visit_header" />
               <Button
