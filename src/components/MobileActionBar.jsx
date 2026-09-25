@@ -24,7 +24,7 @@ export function MobileActionBar() {
         </Link>
         <a
           className="mobile-bar__action"
-          href={business.sliceOrderingUrl}
+          href={business.orderUrl}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => track(EVENTS.DELIVERY_CLICK, { location: 'mobile_bar' })}

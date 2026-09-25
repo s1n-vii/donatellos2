@@ -1,11 +1,18 @@
 import { business, formatHourRange, getRestaurantWeekday } from '../data/business'
 
 /**
- * Renders the owner-confirmed hours from business config. Today's row is marked
- * with both weight and a text label, never colour alone.
- * `variant="compact"` uses short day names for tight columns.
+ * Renders owner-confirmed hours. When hours are not verified yet, shows a call prompt.
  */
 export function Hours({ variant = 'full', className = '' }) {
+  if (!business.hoursVerified || !business.hours.length) {
+    return (
+      <p className={`hours hours--unverified ${className}`.trim()}>
+        Hours are not listed on this site yet. Call{' '}
+        <a href={business.phone.href}>{business.phone.display}</a> for today&apos;s hours.
+      </p>
+    )
+  }
+
   const today = getRestaurantWeekday()
 
   return (

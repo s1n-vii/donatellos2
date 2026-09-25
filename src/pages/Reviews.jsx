@@ -49,7 +49,7 @@ export function Reviews() {
           {import.meta.env.DEV && !showRating && (
             <p className="dev-note">
               Development only: set googleRating, googleReviewCount and ratingLastVerified in
-              src/data/business.js after checking the Google listing. The rating block is hidden
+              src/data/siteConfig.ts after checking the Google listing. The rating block is hidden
               until then.
             </p>
           )}
@@ -88,7 +88,7 @@ export function Reviews() {
 
       <section className="reviews-cta" aria-label="Order">
         <div className="page page--content reviews-cta__inner">
-          <p className="reviews-cta__text">Order pizza, subs and wings from West York.</p>
+          <p className="reviews-cta__text">Order pizza, subs and wings from Abbottstown.</p>
           <CallToOrderButton location="reviews_page" showNumber />
         </div>
       </section>

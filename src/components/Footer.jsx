@@ -66,7 +66,7 @@ export function Footer() {
       </div>
 
       <div className="page site-footer__legal">
-        <p>© {new Date().getFullYear()} Donatellos 2</p>
+        <p>© {new Date().getFullYear()} {business.name}</p>
         <p>{business.areaLine}</p>
       </div>
     </footer>

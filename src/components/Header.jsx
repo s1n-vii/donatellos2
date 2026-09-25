@@ -38,10 +38,8 @@ export function Header() {
     <header className="site-header">
       <div className="site-header__inner page">
         <Link to="/" className="wordmark" aria-label={`${business.name} home`}>
-          <span className="wordmark__name">
-            Donatellos <span className="wordmark__numeral">2</span>
-          </span>
-          <span className="wordmark__place">West York, PA</span>
+          <span className="wordmark__name">Donatello&apos;s</span>
+          <span className="wordmark__place">{business.areaLine}</span>
         </Link>
 
         <nav className="site-nav" aria-label="Main">

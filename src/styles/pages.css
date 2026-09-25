@@ -11,6 +11,29 @@
   background-color: var(--near-black);
 }
 
+.hero--no-photo {
+  min-height: auto;
+}
+
+.hero--no-photo .hero__panel {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-block: var(--section-tight);
+}
+
+@media (min-width: 900px) {
+  .hero--no-photo {
+    min-height: auto;
+    max-width: none;
+  }
+
+  .hero--no-photo .hero__panel {
+    width: 100%;
+    margin-left: 0;
+    padding-inline: var(--gutter);
+  }
+}
+
 .hero__panel {
   padding: var(--space-lg) var(--gutter) var(--space-xl);
   border-top: 3px solid var(--restaurant-red);
@@ -1120,6 +1143,57 @@
   .reviews-list__items > li:nth-child(even) {
     margin-left: auto;
   }
+}
+
+.dine-in--copy-only .dine-in__inner {
+  padding: var(--section-base) var(--gutter);
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+.specials {
+  padding-block: var(--section-tight);
+  background-color: var(--soft-white);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.specials__title {
+  font-size: var(--display-md);
+}
+
+.specials__list {
+  display: grid;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+  padding: 0;
+  list-style: none;
+}
+
+.specials__name {
+  font-family: var(--font-display);
+  font-size: var(--display-sm);
+  text-transform: uppercase;
+}
+
+.specials__desc {
+  margin-top: var(--space-2xs);
+  max-width: var(--measure);
+}
+
+.specials__price {
+  margin-top: var(--space-2xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.hours--unverified {
+  max-width: var(--measure);
+  line-height: 1.5;
+}
+
+.hours--unverified a {
+  font-weight: 600;
+  color: inherit;
 }
 
 /* ===========================================================================

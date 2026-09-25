@@ -75,7 +75,7 @@ export function CallToOrderButton({ variant = 'primary', size = 'md', location, 
 export function DeliveryButton({ variant = 'ghost', size = 'md', location, label = 'Order Delivery' }) {
   return (
     <Button
-      href={business.sliceOrderingUrl}
+      href={business.orderUrl}
       variant={variant}
       size={size}
       external

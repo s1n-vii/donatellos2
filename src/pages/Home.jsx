@@ -4,37 +4,19 @@ import { Hours } from '../components/Hours'
 import { RestaurantImage } from '../components/RestaurantImage'
 import { ReviewQuote } from '../components/ReviewQuote'
 import { addressLines, business, directionsUrl } from '../data/business'
-import { featuredCategoryIds, menu } from '../data/menu'
+import { featuredCategoryIds, formatPrice, menu } from '../data/menu'
 import { getDisplayReviews } from '../data/reviews'
+import { hasSpecials, specials } from '../data/specials'
 import { PAGE_META } from '../data/seo'
 import { EVENTS, track } from '../lib/analytics'
 import { usePageMeta } from '../lib/usePageMeta'
 
-/**
- * Hero photograph. The owner chose the interior shot for version one.
- * To lead with food later, point `src` and `srcSet` at a food image and adjust
- * the focal points — the section layout, height and text placement stay exactly
- * as they are.
- */
-const HERO_IMAGE = {
-  src: '/images/interior/interior-02.webp',
-  srcSet: '/images/interior/interior-02-640.webp 640w, /images/interior/interior-02.webp 1024w',
-  sizes: '(min-width: 1400px) 1400px, 100vw',
-  alt: 'The dining room at Donatellos 2, with wooden tables, black metal chairs, reclaimed wood walls and the pizza counter at the back',
-  // The text panel covers the left of the frame on wide screens, so this shot
-  // is used for the hero: it keeps the pizza counter visible beside the panel.
-  // The floor fills the bottom, so the wide crop sits high.
-  objectPosition: 'center 34%',
-  objectPositionMobile: 'center 40%',
-  placeholderLabel: 'interior-02 — dining room and counter',
-}
+const brandShort = "Donatello's"
 
 /**
  * Food categories. `src` stays null until a real photograph of that item
  * exists; tiles without a photo render as typographic blocks rather than empty
- * frames. To add one, drop the file in public/images/food/ (run
- * `npm run images -- <source> public/images/food/<name> 640 1024`) and set
- * `src`, `srcSet` and a literal `alt`.
+ * frames.
  */
 const FOOD_TILES = [
   {
@@ -42,7 +24,7 @@ const FOOD_TILES = [
     name: 'Pizza',
     to: '/menu#fresh-hot-pizzas',
     src: null,
-    alt: 'A whole pizza from Donatellos 2, cut into slices',
+    alt: `A whole pizza from ${brandShort}, cut into slices`,
     area: 'pizza',
     ratioMobile: '4 / 5',
   },
@@ -51,7 +33,7 @@ const FOOD_TILES = [
     name: 'Cheesesteaks',
     to: '/menu#hot-subs',
     src: null,
-    alt: 'A cheesesteak sub on a roll from Donatellos 2',
+    alt: `A cheesesteak sub on a roll from ${brandShort}`,
     area: 'cheesesteak',
     ratioMobile: '16 / 9',
   },
@@ -60,7 +42,7 @@ const FOOD_TILES = [
     name: 'Cheeseburger Subs',
     to: '/menu#hot-subs',
     src: null,
-    alt: 'A cheeseburger sub from Donatellos 2',
+    alt: `A cheeseburger sub from ${brandShort}`,
     area: 'burger',
     ratioMobile: '4 / 3',
   },
@@ -69,13 +51,12 @@ const FOOD_TILES = [
     name: 'Wings',
     to: '/menu#wings',
     src: null,
-    alt: 'A basket of wings from Donatellos 2',
+    alt: `A basket of wings from ${brandShort}`,
     area: 'wings',
     ratioMobile: '2 / 1',
   },
 ]
 
-/** Set to a file path once a kitchen or dough photo exists. */
 const MADE_HERE_PHOTO = null
 
 const MADE_HERE = [
@@ -93,6 +74,7 @@ export function Home() {
     <>
       <Hero />
       <InfoStrip />
+      {hasSpecials && <SpecialsSection />}
       <FoodFeature />
       <MadeHere />
       <MenuPreview />
@@ -105,14 +87,10 @@ export function Home() {
 
 function Hero() {
   return (
-    <section className="hero" aria-labelledby="hero-heading">
-      <div className="hero__media">
-        <RestaurantImage {...HERO_IMAGE} ratio="16 / 9" ratioMobile="4 / 3" priority />
-      </div>
-
-      <div className="hero__panel on-dark">
+    <section className="hero hero--no-photo on-dark" aria-labelledby="hero-heading">
+      <div className="hero__panel">
         <h1 className="hero__title" id="hero-heading">
-          Pizza, subs &amp; wings made fresh in West York.
+          Pizza, subs &amp; wings made fresh in Abbottstown.
         </h1>
         <p className="hero__body">
           Dough, bread and sauce made in-house. Meats never frozen. Dine in or call ahead for
@@ -138,6 +116,32 @@ function Hero() {
         <p className="hero__tertiary">
           <DeliveryButton variant="link-inverse" location="hero" label="Order Delivery Online" />
         </p>
+      </div>
+    </section>
+  )
+}
+
+function SpecialsSection() {
+  return (
+    <section className="specials" aria-labelledby="specials-heading">
+      <div className="page page--content">
+        <h2 className="specials__title" id="specials-heading">
+          Specials
+        </h2>
+        <ul className="specials__list">
+          {specials.map((special) => (
+            <li className="specials__item" key={special.id}>
+              <h3 className="specials__name">{special.title}</h3>
+              {special.description && <p className="specials__desc">{special.description}</p>}
+              {(special.price != null || special.priceNote) && (
+                <p className="specials__price">
+                  {special.price != null ? formatPrice(special.price) : special.priceNote}
+                </p>
+              )}
+              {special.days && <p className="specials__days text-muted">{special.days}</p>}
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   )
@@ -322,28 +326,16 @@ function MenuPreview() {
 
 function DineIn() {
   return (
-    <section className="dine-in" aria-labelledby="dine-in-heading">
-      <div className="dine-in__media">
-        <RestaurantImage
-          src="/images/interior/interior-01.webp"
-          srcSet="/images/interior/interior-01-640.webp 640w, /images/interior/interior-01.webp 1024w"
-          sizes="(min-width: 900px) 50vw, 100vw"
-          alt="Long wooden tables and bench seating under strings of warm bulbs inside Donatellos 2 on W Market St"
-          ratio="5 / 4"
-          ratioMobile="16 / 10"
-          objectPosition="60% 45%"
-        />
-      </div>
-      <div className="dine-in__copy">
+    <section className="dine-in dine-in--copy-only" aria-labelledby="dine-in-heading">
+      <div className="page dine-in__inner">
         <h2 className="dine-in__title" id="dine-in-heading">
           Stay for a slice.
         </h2>
         <p className="dine-in__text">
-          Dine in at Donatellos 2 on W Market St or call ahead for pickup. Grab a table or call it
-          in.
+          Dine in at {business.name} on {business.address.street} or call ahead for pickup.
         </p>
         <Button to="/visit" variant="primary">
-          Visit Donatellos 2
+          Visit us in Abbottstown
         </Button>
       </div>
     </section>
@@ -376,13 +368,6 @@ function ReviewsPreview() {
           </p>
         )}
 
-        {import.meta.env.DEV && displayed.some((review) => !review.verified) && (
-          <p className="dev-note">
-            Development only: paste real, publicly posted reviews into src/data/reviews.js and set
-            verified: true. Unverified entries are removed from production builds.
-          </p>
-        )}
-
         <div className="home-reviews__grid">
           {displayed.map((review) => (
             <ReviewQuote key={review.id} review={review} />
@@ -399,7 +384,7 @@ function LocationBlock() {
       <div className="page home-location__inner">
         <div className="home-location__details">
           <h2 className="home-location__title" id="home-location-heading">
-            Donatellos 2
+            {business.name}
           </h2>
           <address className="home-location__address">
             {addressLines.map((line) => (

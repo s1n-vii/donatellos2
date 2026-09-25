@@ -10,7 +10,7 @@ import { launchBrowser } from './launch.mjs'
 
 // These two suites check the built output, so they default to `vite preview`.
 const BASE = process.env.QA_BASE ?? 'http://localhost:4173'
-const ORIGIN = 'https://donatellos2.vercel.app'
+const ORIGIN = 'https://donatellos-abbottstown.vercel.app'
 const ROUTES = [PAGE_META.home, PAGE_META.menu, PAGE_META.visit, PAGE_META.reviews]
 const ROUTE_FILES = [
   [PAGE_META.home, 'index.html'],
@@ -72,21 +72,16 @@ const banned = ['priceRange', 'geo', 'sameAs', 'founder', 'foundingDate', 'aggre
 for (const key of banned) {
   if (key in jsonLd) issues.push(`JSON-LD contains unverified field: ${key}`)
 }
-if (jsonLd.telephone !== '+1-717-699-7896') issues.push(`JSON-LD phone wrong: ${jsonLd.telephone}`)
-if (jsonLd.address?.streetAddress !== '4790 W Market St')
+if (jsonLd.telephone !== '+1-717-624-7930') issues.push(`JSON-LD phone wrong: ${jsonLd.telephone}`)
+if (jsonLd.address?.streetAddress !== '6945 York Rd')
   issues.push(`JSON-LD street wrong: ${jsonLd.address?.streetAddress}`)
-if (jsonLd.openingHoursSpecification?.length !== 6)
-  issues.push(`JSON-LD should list 6 open days, got ${jsonLd.openingHoursSpecification?.length}`)
-const friday = jsonLd.openingHoursSpecification?.find((d) => d.dayOfWeek.endsWith('Friday'))
-if (friday?.closes !== '22:00') issues.push(`JSON-LD Friday close wrong: ${friday?.closes}`)
-const tuesday = jsonLd.openingHoursSpecification?.find((d) => d.dayOfWeek.endsWith('Tuesday'))
-if (tuesday?.opens !== '11:00' || tuesday?.closes !== '21:00')
-  issues.push(`JSON-LD Tuesday wrong: ${tuesday?.opens}–${tuesday?.closes}`)
-if (jsonLd.openingHoursSpecification?.some((d) => d.dayOfWeek.endsWith('Sunday')))
-  issues.push('JSON-LD lists Sunday, which is a closed day')
-if (jsonLd.url !== 'https://donatellos2.vercel.app') issues.push(`JSON-LD url wrong: ${jsonLd.url}`)
-if (jsonLd.hasMenu !== 'https://donatellos2.vercel.app/menu')
-  issues.push(`JSON-LD hasMenu wrong: ${jsonLd.hasMenu}`)
+if (jsonLd.address?.addressLocality !== 'Abbottstown')
+  issues.push(`JSON-LD city wrong: ${jsonLd.address?.addressLocality}`)
+if ('openingHoursSpecification' in jsonLd)
+  issues.push('JSON-LD must not list hours until owner-confirmed')
+if (jsonLd.url !== ORIGIN) issues.push(`JSON-LD url wrong: ${jsonLd.url}`)
+if (jsonLd.hasMenu !== `${ORIGIN}/menu`) issues.push(`JSON-LD hasMenu wrong: ${jsonLd.hasMenu}`)
+if ('image' in jsonLd && !SHARE_IMAGE_PATH) issues.push('JSON-LD must not claim image without a real photo')
 
 // Client-rendered metadata must stay correct after direct loads and SPA
 // navigation. Raw pre-JavaScript metadata is checked separately below.
@@ -107,18 +102,26 @@ for (const meta of ROUTES) {
   const twitterTitle = await page.locator('meta[name="twitter:title"]').getAttribute('content')
   if (twitterTitle !== meta.title)
     issues.push(`${meta.path} twitter:title is "${twitterTitle}"`)
-  const ogImage = await page.locator('meta[property="og:image"]').getAttribute('content')
-  if (ogImage !== ORIGIN + SHARE_IMAGE_PATH)
-    issues.push(`${meta.path} og:image is "${ogImage}"`)
-  const twitterImage = await page.locator('meta[name="twitter:image"]').getAttribute('content')
+  const ogImage =
+    (await page.locator('meta[property="og:image"]').count()) > 0
+      ? await page.locator('meta[property="og:image"]').getAttribute('content')
+      : null
+  const expectedOgImage = SHARE_IMAGE_PATH ? ORIGIN + SHARE_IMAGE_PATH : null
+  if (ogImage !== expectedOgImage)
+    issues.push(`${meta.path} og:image is "${ogImage}", expected "${expectedOgImage}"`)
+  const twitterImage =
+    (await page.locator('meta[name="twitter:image"]').count()) > 0
+      ? await page.locator('meta[name="twitter:image"]').getAttribute('content')
+      : null
   if (twitterImage !== ogImage)
     issues.push(`${meta.path} twitter:image is "${twitterImage}"`)
-  // The share image has to exist, or the link preview is blank.
-  const status = await page.evaluate(
-    (url) => fetch(url, { method: 'HEAD' }).then((r) => r.status),
-    new URL(new URL(ogImage).pathname, BASE).href,
-  )
-  if (status !== 200) issues.push(`${meta.path} og:image returns ${status}`)
+  if (ogImage) {
+    const status = await page.evaluate(
+      (url) => fetch(url, { method: 'HEAD' }).then((r) => r.status),
+      new URL(new URL(ogImage).pathname, BASE).href,
+    )
+    if (status !== 200) issues.push(`${meta.path} og:image returns ${status}`)
+  }
 }
 
 // Inspect the built files directly. This is deliberately not a DOM/browser
@@ -134,7 +137,7 @@ const decodeHtml = (value = '') =>
 function rawMeta(html, attribute, key) {
   const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const tag = html.match(new RegExp(`<meta\\s+[^>]*${attribute}=["']${escaped}["'][^>]*>`, 'i'))?.[0]
-  return decodeHtml(tag?.match(/content=["']([^"']*)["']/i)?.[1])
+  return decodeHtml(tag?.match(/content="([^"]*)"/i)?.[1])
 }
 
 for (const [meta, file] of ROUTE_FILES) {
@@ -174,8 +177,8 @@ if (!existsSync(notFoundHtmlPath)) {
   issues.push('dist/404.html is missing')
 } else {
   const notFoundHtml = readFileSync(notFoundHtmlPath, 'utf8')
-  if (!notFoundHtml.includes('<title>Page not found | Donatellos 2</title>'))
-    issues.push('404.html has the wrong raw title')
+  const notFoundTitle = decodeHtml(notFoundHtml.match(/<title>([\s\S]*?)<\/title>/i)?.[1])
+  if (notFoundTitle !== PAGE_META.notFound.title) issues.push(`404.html raw title is "${notFoundTitle}"`)
   if (rawMeta(notFoundHtml, 'name', 'robots') !== 'noindex, follow')
     issues.push('404.html must use noindex, follow')
   if (/<link\s+[^>]*rel=["']canonical["']/i.test(notFoundHtml))
@@ -225,11 +228,13 @@ for (const route of ['/', '/visit']) {
     issues.push(`${route} renders an empty photo frame`)
 }
 
-// The Reviews page must carry the verified rating and real reviewer names.
 await page.goto(BASE + '/reviews', { waitUntil: 'networkidle' })
 const reviewsText = await page.evaluate(() => document.body.innerText)
-for (const expected of ['4.6 out of 5', '49 Google reviews', 'David Stout', 'Glenn Ford', 'David Bickford']) {
-  if (!reviewsText.includes(expected)) issues.push(`/reviews is missing "${expected}"`)
+if (!reviewsText.includes('Review excerpts are being added'))
+  issues.push('/reviews should explain that excerpts are not published yet')
+for (const forbidden of ['West York', '4790 W Market', 'Glenn Ford', 'David Bickford']) {
+  if (reviewsText.includes(forbidden))
+    issues.push(`/reviews must not contain West York review copy: "${forbidden}"`)
 }
 
 await browser.close()
